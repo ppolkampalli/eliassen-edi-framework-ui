@@ -53,5 +53,31 @@ export const documentApi = {
       console.error('Error fetching invoice:', error);
       throw error;
     }
+  },
+
+  /**
+   * Analyze documents using AI service
+   */
+  async analyzeDocuments(params: DocumentQueryParams): Promise<any> {
+    const url = `${API_BASE_URL}/ai/analyze`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(params)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Analysis failed: ${response.status} ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error analyzing documents:', error);
+      throw error;
+    }
   }
 };
