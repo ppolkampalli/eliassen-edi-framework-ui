@@ -3,7 +3,6 @@ import { DocumentSearchForm } from '../components/DocumentSearchForm';
 import { DocumentTable } from '../components/DocumentTable';
 import { Tabs } from '../components/Tabs';
 import { AnalysisDashboard } from '../components/analysis/AnalysisDashboard';
-import { FloatingChatButton } from '../components/assistant/FloatingChatButton';
 import type { DocumentQueryParams, DocumentSummary } from '../../../shared/types/document.types';
 import type { EDIBusinessAnalysis } from '../../../shared/types/analysis.types';
 import { documentApi } from '../services/documentApi';
@@ -19,10 +18,6 @@ export function DocumentDetails() {
   const [analysisData, setAnalysisData] = useState<EDIBusinessAnalysis | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
-
-  // Assistant state
-  const [assistantWidth, setAssistantWidth] = useState(0);
-  const [isAssistantPinned, setIsAssistantPinned] = useState(false);
 
   const handleSearch = async (params: DocumentQueryParams) => {
     setIsLoading(true);
@@ -73,12 +68,7 @@ export function DocumentDetails() {
   };
 
   return (
-    <div
-      className="container mx-auto px-4 py-8 transition-all duration-300"
-      style={{
-        marginRight: isAssistantPinned ? `${assistantWidth}px` : '0'
-      }}
-    >
+    <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Document Details</h1>
 
       <DocumentSearchForm onSearch={handleSearch} isLoading={isLoading} />
@@ -170,12 +160,6 @@ export function DocumentDetails() {
           No documents found. Try adjusting your search criteria.
         </div>
       )}
-
-      {/* Floating AI Assistant */}
-      <FloatingChatButton
-        onWidthChange={setAssistantWidth}
-        onPinnedChange={setIsAssistantPinned}
-      />
     </div>
   );
 }

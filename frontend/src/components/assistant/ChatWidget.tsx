@@ -43,6 +43,13 @@ export function ChatWidget({ conversationId: initialConversationId, onConversati
 
     if (!input.trim() || isLoading) return;
 
+    // Check for reset command
+    const trimmedInput = input.trim().toLowerCase();
+    if (trimmedInput === 'reset' || trimmedInput === '/reset') {
+      handleClearChat();
+      return;
+    }
+
     const userMessage: ChatMessage = {
       role: 'user',
       content: input.trim(),
@@ -108,6 +115,7 @@ export function ChatWidget({ conversationId: initialConversationId, onConversati
     try {
       await assistantApi.clearConversation(conversationId);
       setMessages([]);
+      setInput(''); // Clear input field
       const newConvId = `conv-${Date.now()}`;
       setConversationId(newConvId);
       if (onConversationIdChange) {

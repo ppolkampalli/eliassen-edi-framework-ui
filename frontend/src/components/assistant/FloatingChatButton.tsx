@@ -36,8 +36,6 @@ export function FloatingChatButton({ onWidthChange, onPinnedChange }: FloatingCh
       await assistantApi.clearConversation(conversationId);
       const newConvId = `conv-${Date.now()}`;
       setConversationId(newConvId);
-      // Force ChatWidget to reload by triggering a re-render
-      window.location.reload();
     } catch (err) {
       console.error('Failed to clear conversation:', err);
     }

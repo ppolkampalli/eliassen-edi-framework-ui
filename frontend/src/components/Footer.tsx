@@ -35,56 +35,26 @@ export const Footer = () => {
     },
   ];
 
-  const footerLinks = [
-    {
-      title: 'Product',
-      links: [
-        { name: 'Features', href: '#features' },
-        { name: 'Documentation', href: '#docs' },
-        { name: 'API Reference', href: '#api' },
-        { name: 'Examples', href: '#examples' },
-      ],
-    },
-    {
-      title: 'Resources',
-      links: [
-        { name: 'Getting Started', href: '#start' },
-        { name: 'Tutorials', href: '#tutorials' },
-        { name: 'Blog', href: '#blog' },
-        { name: 'Community', href: '#community' },
-      ],
-    },
-    {
-      title: 'Company',
-      links: [
-        { name: 'About', href: '#about' },
-        { name: 'Contact', href: '#contact' },
-        { name: 'Privacy', href: '#privacy' },
-        { name: 'Terms', href: '#terms' },
-      ],
-    },
-  ];
-
   return (
     <footer className="bg-gray-900 text-gray-300">
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-8">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           {/* Brand Section */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">ED</span>
-              </div>
-              <span className="text-xl font-bold text-white">
-                Eliassen EDI Framework
-              </span>
+          <div className="flex items-center space-x-2">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-xl">ED</span>
             </div>
-            <p className="text-gray-400 mb-4 max-w-md">
-              A modern, production-ready EDI framework with React 19,
-              Express.js, Tailwind CSS, and AI capabilities. Build amazing applications faster.
-            </p>
-            {/* Social Links */}
+            <span className="text-xl font-bold text-white">
+              Eliassen EDI Framework
+            </span>
+          </div>
+
+          {/* Social Links */}
+          <div className="flex items-center space-x-6">
+            <span className="text-gray-400 text-sm hidden md:inline">
+              © {currentYear} Eliassen EDI Framework. All rights reserved.
+            </span>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (
                 <a
@@ -101,37 +71,9 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* Footer Links */}
-          {footerLinks.map((section) => (
-            <div key={section.title}>
-              <h3 className="text-white font-semibold mb-4">{section.title}</h3>
-              <ul className="space-y-2">
-                {section.links.map((link) => (
-                  <li key={link.name}>
-                    <a
-                      href={link.href}
-                      className="text-gray-400 hover:text-primary-500 transition-colors"
-                    >
-                      {link.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="border-t border-gray-800 pt-8 mt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-gray-400 text-sm">
-              © {currentYear} Eliassen EDI Framework. All rights reserved.
-            </div>
-            <div className="flex items-center space-x-6 text-sm">
-              <span className="text-gray-400">
-                Built with ❤️ using React, TypeScript, and Tailwind CSS
-              </span>
-            </div>
+          {/* Mobile copyright */}
+          <div className="text-gray-400 text-sm md:hidden">
+            © {currentYear} All rights reserved.
           </div>
         </div>
       </div>
