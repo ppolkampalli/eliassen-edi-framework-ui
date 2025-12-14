@@ -3,21 +3,14 @@ import { DocumentSearchForm } from '../components/DocumentSearchForm';
 import { DocumentTable } from '../components/DocumentTable';
 import { Tabs } from '../components/Tabs';
 import { AnalysisDashboard } from '../components/analysis/AnalysisDashboard';
-import type { DocumentQueryParams, DocumentSummary } from '../../../shared/types/document.types';
-import type { EDIBusinessAnalysis } from '../../../shared/types/analysis.types';
+import { useAppContext } from '../context/AppContext';
+import type { DocumentQueryParams } from '../../../shared/types/document.types';
 import { documentApi } from '../services/documentApi';
 
 export function DocumentDetails() {
-  const [documents, setDocuments] = useState<DocumentSummary[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
+  const { documentState, setDocumentState, analysisState, setAnalysisState } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Analysis state
-  const [activeTab, setActiveTab] = useState<'grid' | 'analysis'>('grid');
-  const [analysisData, setAnalysisData] = useState<EDIBusinessAnalysis | null>(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisError, setAnalysisError] = useState<string | null>(null);
 
   const handleSearch = async (params: DocumentQueryParams) => {
     setIsLoading(true);
@@ -27,43 +20,59 @@ export function DocumentDetails() {
       const response = await documentApi.getDocuments(params);
 
       if (response.successful) {
-        setDocuments(response.data);
-        setTotalCount(response.totalCount);
+        setDocumentState({
+          documents: response.data,
+          totalCount: response.totalCount,
+          lastSearchParams: params,
+        });
 
         // Automatically trigger analysis after successful document load
         triggerAnalysis(params);
       } else {
         setError(response.errors.join(', ') || 'Failed to fetch documents');
-        setDocuments([]);
-        setTotalCount(0);
+        setDocumentState({
+          documents: [],
+          totalCount: 0,
+        });
       }
     } catch (err) {
       setError((err as Error).message || 'An error occurred while fetching documents');
-      setDocuments([]);
-      setTotalCount(0);
+      setDocumentState({
+        documents: [],
+        totalCount: 0,
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
   const triggerAnalysis = async (params: DocumentQueryParams) => {
-    setIsAnalyzing(true);
-    setAnalysisError(null);
+    setAnalysisState({
+      isAnalyzing: true,
+      analysisError: null,
+    });
 
     try {
       const result = await documentApi.analyzeDocuments(params);
 
       if (result.status === 'success' && result.data) {
-        setAnalysisData(result.data.analysis);
+        setAnalysisState({
+          analysisData: result.data.analysis,
+          isAnalyzing: false,
+        });
         // Auto-switch to Analysis tab after analysis completes
-        setActiveTab('analysis');
+        setDocumentState({ activeTab: 'analysis' });
       } else {
-        setAnalysisError('Analysis failed: Invalid response format');
+        setAnalysisState({
+          analysisError: 'Analysis failed: Invalid response format',
+          isAnalyzing: false,
+        });
       }
     } catch (err) {
-      setAnalysisError((err as Error).message || 'An error occurred during analysis');
-    } finally {
-      setIsAnalyzing(false);
+      setAnalysisState({
+        analysisError: (err as Error).message || 'An error occurred during analysis',
+        isAnalyzing: false,
+      });
     }
   };
 
@@ -86,7 +95,7 @@ export function DocumentDetails() {
         </div>
       )}
 
-      {!isLoading && documents.length > 0 && (
+      {!isLoading && documentState.documents.length > 0 && (
         <div className="mt-6">
           <Tabs
             tabs={[
@@ -107,24 +116,24 @@ export function DocumentDetails() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 ),
-                badge: isAnalyzing ? 'Analyzing...' : (analysisData ? '✓' : undefined)
+                badge: analysisState.isAnalyzing ? 'Analyzing...' : (analysisState.analysisData ? '✓' : undefined)
               }
             ]}
-            activeTab={activeTab}
-            onTabChange={(tabId) => setActiveTab(tabId as 'grid' | 'analysis')}
+            activeTab={documentState.activeTab}
+            onTabChange={(tabId) => setDocumentState({ activeTab: tabId as 'grid' | 'analysis' })}
           >
-            {activeTab === 'grid' && (
+            {documentState.activeTab === 'grid' && (
               <div>
                 <p className="text-sm text-gray-600 mb-4">
-                  Found {totalCount} document{totalCount !== 1 ? 's' : ''}
+                  Found {documentState.totalCount} document{documentState.totalCount !== 1 ? 's' : ''}
                 </p>
-                <DocumentTable documents={documents} />
+                <DocumentTable documents={documentState.documents} />
               </div>
             )}
 
-            {activeTab === 'analysis' && (
+            {documentState.activeTab === 'analysis' && (
               <div>
-                {isAnalyzing && (
+                {analysisState.isAnalyzing && (
                   <div className="text-center py-12">
                     <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
                     <p className="mt-4 text-gray-600">Analyzing documents with AI...</p>
@@ -132,13 +141,13 @@ export function DocumentDetails() {
                   </div>
                 )}
 
-                {analysisError && (
+                {analysisState.analysisError && (
                   <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    <strong>Analysis Error:</strong> {analysisError}
+                    <strong>Analysis Error:</strong> {analysisState.analysisError}
                   </div>
                 )}
 
-                {!isAnalyzing && !analysisError && !analysisData && (
+                {!analysisState.isAnalyzing && !analysisState.analysisError && !analysisState.analysisData && (
                   <div className="text-center py-12 bg-gray-50 rounded-lg">
                     <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -148,14 +157,14 @@ export function DocumentDetails() {
                   </div>
                 )}
 
-                {analysisData && <AnalysisDashboard data={analysisData} />}
+                {analysisState.analysisData && <AnalysisDashboard data={analysisState.analysisData} />}
               </div>
             )}
           </Tabs>
         </div>
       )}
 
-      {!isLoading && !error && documents.length === 0 && (
+      {!isLoading && !error && documentState.documents.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           No documents found. Try adjusting your search criteria.
         </div>
