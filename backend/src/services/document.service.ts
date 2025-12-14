@@ -133,6 +133,22 @@ export class DocumentService {
   }
 
   /**
+   * Extract invoice number from docExtensions array
+   */
+  private extractInvoiceNumber(docExtensions: any[]): string | null {
+    if (!docExtensions || !Array.isArray(docExtensions) || docExtensions.length === 0) {
+      return null;
+    }
+
+    // Find the extension with name 'INVOICE_NUMBER'
+    const invoiceExt = docExtensions.find(
+      (ext: any) => ext.name === 'INVOICE_NUMBER' || ext.extensionName === 'INVOICE_NUMBER'
+    );
+
+    return invoiceExt?.value || invoiceExt?.extensionValue || null;
+  }
+
+  /**
    * Map external response to trimmed response
    */
   private mapToTrimmedResponse(externalData: ExternalDocumentResponse): DocumentApiResponse {
@@ -155,7 +171,8 @@ export class DocumentService {
         outboundMessageFilename: doc.outboundMessageFilename,
         interchangeNumber: doc.interchangeNumber,
         groupNumber: doc.groupNumber,
-        transactionNumber: doc.transactionNumber
+        transactionNumber: doc.transactionNumber,
+        invoiceNumber: this.extractInvoiceNumber(doc.docExtensions)
       })
     );
 
@@ -195,7 +212,8 @@ export class DocumentService {
         outboundMessageFilename: 'PRODUXINC_MAXXMART_810.txt',
         interchangeNumber: '000000003',
         groupNumber: '3',
-        transactionNumber: '1'
+        transactionNumber: '1',
+        invoiceNumber: 'INV-2024-0001'
       },
       {
         wfid: 3285874,
@@ -215,7 +233,8 @@ export class DocumentService {
         outboundMessageFilename: 'PRODUXINC_MAXXMART_810.txt',
         interchangeNumber: '000000002',
         groupNumber: '2',
-        transactionNumber: '1'
+        transactionNumber: '1',
+        invoiceNumber: 'INV-2024-0002'
       },
       {
         wfid: 3285806,
@@ -235,7 +254,8 @@ export class DocumentService {
         outboundMessageFilename: null,
         interchangeNumber: '000000001',
         groupNumber: '1',
-        transactionNumber: '1'
+        transactionNumber: '1',
+        invoiceNumber: null // No invoice number for PO documents
       },
       {
         wfid: 3285786,
@@ -255,7 +275,8 @@ export class DocumentService {
         outboundMessageFilename: null,
         interchangeNumber: null,
         groupNumber: null,
-        transactionNumber: null
+        transactionNumber: null,
+        invoiceNumber: 'INV-2024-0003'
       },
       {
         wfid: 3285776,
@@ -275,7 +296,8 @@ export class DocumentService {
         outboundMessageFilename: 'TECHSUPPLY_MAXXMART_856.txt',
         interchangeNumber: '000000005',
         groupNumber: '5',
-        transactionNumber: '1'
+        transactionNumber: '1',
+        invoiceNumber: null // No invoice number for ASN documents
       }
     ];
 

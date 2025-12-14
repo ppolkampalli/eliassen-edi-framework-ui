@@ -45,6 +45,7 @@ export interface DocumentSummary {
   interchangeNumber: string | null;
   groupNumber: string | null;
   transactionNumber: string | null;
+  invoiceNumber: string | null; // Extracted from docExtensions
 }
 
 // API Response wrapper

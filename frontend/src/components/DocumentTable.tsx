@@ -68,6 +68,19 @@ export function DocumentTable({ documents }: DocumentTableProps) {
         cell: info => info.getValue(),
         enableSorting: true,
       }),
+      columnHelper.accessor('invoiceNumber', {
+        header: 'Invoice #',
+        cell: info => {
+          const invoiceNum = info.getValue();
+          return invoiceNum ? (
+            <span className="font-mono text-sm">{invoiceNum}</span>
+          ) : (
+            <span className="text-gray-400">-</span>
+          );
+        },
+        enableSorting: true,
+        enableColumnFilter: true,
+      }),
       columnHelper.accessor('transactionStatus', {
         header: 'Status',
         cell: info => {
