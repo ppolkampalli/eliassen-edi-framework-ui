@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { DocumentSearchForm } from '../components/DocumentSearchForm';
-import { InvoiceSearch } from '../components/InvoiceSearch';
 import { DocumentTable } from '../components/DocumentTable';
 import type { DocumentQueryParams, DocumentSummary } from '../../../shared/types/document.types';
 import { documentApi } from '../services/documentApi';
@@ -35,35 +34,9 @@ export function DocumentDetails() {
     }
   };
 
-  const handleInvoiceSearch = async (invoiceNumber: string) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await documentApi.getInvoiceByNumber(invoiceNumber);
-
-      if (response.successful) {
-        setDocuments(response.data);
-        setTotalCount(response.totalCount);
-      } else {
-        setError(response.errors.join(', ') || 'Failed to fetch invoice');
-        setDocuments([]);
-        setTotalCount(0);
-      }
-    } catch (err) {
-      setError((err as Error).message || 'An error occurred while fetching invoice');
-      setDocuments([]);
-      setTotalCount(0);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Document Details</h1>
-
-      <InvoiceSearch onSearch={handleInvoiceSearch} isLoading={isLoading} />
 
       <DocumentSearchForm onSearch={handleSearch} isLoading={isLoading} />
 

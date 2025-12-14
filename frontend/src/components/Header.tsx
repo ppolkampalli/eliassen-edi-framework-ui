@@ -15,8 +15,7 @@ export const Header = ({ onAIAssistantToggle }: HeaderProps) => {
   const navLinks = [
     { name: 'Home', href: '/', isRoute: true },
     { name: 'Document Details', href: '/documents', isRoute: true },
-    { name: 'Features', href: '#features', isRoute: false },
-    { name: 'About', href: '#about', isRoute: false },
+    { name: 'Invoice Management', href: '/invoices', isRoute: true },
   ];
 
   return (

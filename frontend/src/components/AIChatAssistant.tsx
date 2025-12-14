@@ -8,9 +8,11 @@ interface Message {
 
 interface AIChatAssistantProps {
   onClose: () => void;
+  onPinnedChange?: (pinned: boolean) => void;
+  onWidthChange?: (width: number) => void;
 }
 
-export function AIChatAssistant({ onClose }: AIChatAssistantProps) {
+export function AIChatAssistant({ onClose, onPinnedChange, onWidthChange }: AIChatAssistantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +26,20 @@ export function AIChatAssistant({ onClose }: AIChatAssistantProps) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Notify parent when pinned state changes
+  useEffect(() => {
+    if (onPinnedChange) {
+      onPinnedChange(isPinned);
+    }
+  }, [isPinned, onPinnedChange]);
+
+  // Notify parent when width changes
+  useEffect(() => {
+    if (onWidthChange) {
+      onWidthChange(width);
+    }
+  }, [width, onWidthChange]);
 
   // Handle window resizing
   useEffect(() => {
