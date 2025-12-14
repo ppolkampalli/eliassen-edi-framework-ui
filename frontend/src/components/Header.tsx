@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 interface HeaderProps {
   onAIAssistantToggle?: () => void;
@@ -7,6 +7,7 @@ interface HeaderProps {
 
 export const Header = ({ onAIAssistantToggle }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -18,43 +19,56 @@ export const Header = ({ onAIAssistantToggle }: HeaderProps) => {
     { name: 'Invoice Management', href: '/invoices', isRoute: true },
   ];
 
+  const isActiveRoute = (href: string) => {
+    return location.pathname === href;
+  };
+
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">ED</span>
+          {/* Logo and Navigation Links - Left side */}
+          <div className="flex items-center space-x-8">
+            {/* Logo */}
+            <div className="flex items-center space-x-2">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-xl">ED</span>
+              </div>
+              <span className="text-xl font-bold text-gray-800">
+                Eliassen EDI Framework
+              </span>
             </div>
-            <span className="text-xl font-bold text-gray-800">
-              Eliassen EDI Framework
-            </span>
+
+            {/* Desktop Navigation Links */}
+            <div className="hidden md:flex items-center space-x-6">
+              {navLinks.map((link) => (
+                link.isRoute ? (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className={`transition-colors font-medium px-3 py-2 rounded-lg ${
+                      isActiveRoute(link.href)
+                        ? 'text-primary-600 bg-primary-50 border-b-2 border-primary-600'
+                        : 'text-gray-600 hover:text-primary-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    className="text-gray-600 hover:text-primary-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-gray-50"
+                  >
+                    {link.name}
+                  </a>
+                )
+              ))}
+            </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              link.isRoute ? (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className="text-gray-600 hover:text-primary-600 transition-colors font-medium"
-                >
-                  {link.name}
-                </Link>
-              ) : (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className="text-gray-600 hover:text-primary-600 transition-colors font-medium"
-                >
-                  {link.name}
-                </a>
-              )
-            ))}
-
-            {/* AI Assistant Button */}
+          {/* Right side - AI Assistant Button */}
+          <div className="hidden md:flex items-center">
             {onAIAssistantToggle && (
               <button
                 onClick={onAIAssistantToggle}
@@ -123,13 +137,17 @@ export const Header = ({ onAIAssistantToggle }: HeaderProps) => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-gray-200 pt-4 animate-in slide-in-from-top">
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-2">
               {navLinks.map((link) => (
                 link.isRoute ? (
                   <Link
                     key={link.name}
                     to={link.href}
-                    className="text-gray-600 hover:text-primary-600 transition-colors font-medium px-2 py-1"
+                    className={`transition-colors font-medium px-3 py-2 rounded-lg ${
+                      isActiveRoute(link.href)
+                        ? 'text-primary-600 bg-primary-50 border-l-4 border-primary-600'
+                        : 'text-gray-600 hover:text-primary-600 hover:bg-gray-50'
+                    }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {link.name}
@@ -138,7 +156,7 @@ export const Header = ({ onAIAssistantToggle }: HeaderProps) => {
                   <a
                     key={link.name}
                     href={link.href}
-                    className="text-gray-600 hover:text-primary-600 transition-colors font-medium px-2 py-1"
+                    className="text-gray-600 hover:text-primary-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-gray-50"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {link.name}
