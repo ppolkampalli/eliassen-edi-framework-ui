@@ -133,19 +133,27 @@ export class DocumentService {
   }
 
   /**
-   * Extract invoice number from docExtensions array
+   * Extract invoice number from docExtensions array or construct from reference and wfid
    */
-  private extractInvoiceNumber(docExtensions: any[]): string | null {
-    if (!docExtensions || !Array.isArray(docExtensions) || docExtensions.length === 0) {
-      return null;
+  private extractInvoiceNumber(doc: ExternalDocument): string | null {
+    // For invoice documents (810), construct invoice number from reference and wfid
+    if (doc.documentType === '810' && doc.reference) {
+      // Format: reference_wfid (e.g., 406412_3285897)
+      return `${doc.reference}_${doc.wfid}`;
     }
 
-    // Find the extension with name 'INVOICE_NUMBER'
-    const invoiceExt = docExtensions.find(
-      (ext: any) => ext.name === 'INVOICE_NUMBER' || ext.extensionName === 'INVOICE_NUMBER'
-    );
+    // Try to get from docExtensions as fallback
+    if (doc.docExtensions && Array.isArray(doc.docExtensions) && doc.docExtensions.length > 0) {
+      const invoiceExt = doc.docExtensions.find(
+        (ext: any) => ext.name === 'INVOICE_NUMBER' || ext.extensionName === 'INVOICE_NUMBER'
+      );
 
-    return invoiceExt?.value || invoiceExt?.extensionValue || null;
+      if (invoiceExt?.value || invoiceExt?.extensionValue) {
+        return invoiceExt.value || invoiceExt.extensionValue;
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -172,7 +180,7 @@ export class DocumentService {
         interchangeNumber: doc.interchangeNumber,
         groupNumber: doc.groupNumber,
         transactionNumber: doc.transactionNumber,
-        invoiceNumber: this.extractInvoiceNumber(doc.docExtensions)
+        invoiceNumber: this.extractInvoiceNumber(doc)
       })
     );
 
@@ -213,7 +221,7 @@ export class DocumentService {
         interchangeNumber: '000000003',
         groupNumber: '3',
         transactionNumber: '1',
-        invoiceNumber: 'INV-2024-0001'
+        invoiceNumber: '406412_3285897'
       },
       {
         wfid: 3285874,
@@ -234,7 +242,7 @@ export class DocumentService {
         interchangeNumber: '000000002',
         groupNumber: '2',
         transactionNumber: '1',
-        invoiceNumber: 'INV-2024-0002'
+        invoiceNumber: '406413_3285874'
       },
       {
         wfid: 3285806,
@@ -276,7 +284,7 @@ export class DocumentService {
         interchangeNumber: null,
         groupNumber: null,
         transactionNumber: null,
-        invoiceNumber: 'INV-2024-0003'
+        invoiceNumber: '406414_3285786'
       },
       {
         wfid: 3285776,
