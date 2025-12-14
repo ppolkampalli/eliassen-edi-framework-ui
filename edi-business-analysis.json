@@ -1,0 +1,499 @@
+{
+  "metadata": {
+    "totalDocuments": 25,
+    "totalCountFromAPI": 201,
+    "apiVersion": "v2.13.11-9d5f14f",
+    "analysisDate": "2025-12-14T15:38:46.506Z",
+    "dataCompleteness": "12.44%"
+  },
+  "transactionStatusDistribution": {
+    "summary": {
+      "ACK-MAN": 5,
+      "ERROR": 8,
+      "CLEARED": 7,
+      "SENT": 2,
+      "ERROR-HANDLED": 1,
+      "DELIVERED": 1,
+      "RECEIVED": 1
+    },
+    "percentage": {
+      "ACK-MAN": {
+        "count": 5,
+        "percentage": "20.00%"
+      },
+      "ERROR": {
+        "count": 8,
+        "percentage": "32.00%"
+      },
+      "CLEARED": {
+        "count": 7,
+        "percentage": "28.00%"
+      },
+      "SENT": {
+        "count": 2,
+        "percentage": "8.00%"
+      },
+      "ERROR-HANDLED": {
+        "count": 1,
+        "percentage": "4.00%"
+      },
+      "DELIVERED": {
+        "count": 1,
+        "percentage": "4.00%"
+      },
+      "RECEIVED": {
+        "count": 1,
+        "percentage": "4.00%"
+      }
+    },
+    "chartData": [
+      {
+        "status": "ACK-MAN",
+        "count": 5,
+        "percentage": 20
+      },
+      {
+        "status": "ERROR",
+        "count": 8,
+        "percentage": 32
+      },
+      {
+        "status": "CLEARED",
+        "count": 7,
+        "percentage": 28
+      },
+      {
+        "status": "SENT",
+        "count": 2,
+        "percentage": 8
+      },
+      {
+        "status": "ERROR-HANDLED",
+        "count": 1,
+        "percentage": 4
+      },
+      {
+        "status": "DELIVERED",
+        "count": 1,
+        "percentage": 4
+      },
+      {
+        "status": "RECEIVED",
+        "count": 1,
+        "percentage": 4
+      }
+    ]
+  },
+  "documentTypeDistribution": {
+    "summary": {
+      "810": 5,
+      "AUTOMATED_TEST_RETRY": 9,
+      "AUTOMATED_TEST_BATCHED": 2,
+      "AUTOMATED_TEST_QUEUED": 2,
+      "AUTOMATED_TEST_SUSPENSE": 1,
+      "SUSPEND_TEST": 1,
+      "AUTOMATED_TEST_ERROR": 5
+    },
+    "percentage": {
+      "810": {
+        "count": 5,
+        "percentage": "20.00%"
+      },
+      "AUTOMATED_TEST_RETRY": {
+        "count": 9,
+        "percentage": "36.00%"
+      },
+      "AUTOMATED_TEST_BATCHED": {
+        "count": 2,
+        "percentage": "8.00%"
+      },
+      "AUTOMATED_TEST_QUEUED": {
+        "count": 2,
+        "percentage": "8.00%"
+      },
+      "AUTOMATED_TEST_SUSPENSE": {
+        "count": 1,
+        "percentage": "4.00%"
+      },
+      "SUSPEND_TEST": {
+        "count": 1,
+        "percentage": "4.00%"
+      },
+      "AUTOMATED_TEST_ERROR": {
+        "count": 5,
+        "percentage": "20.00%"
+      }
+    },
+    "chartData": [
+      {
+        "documentType": "AUTOMATED_TEST_RETRY",
+        "count": 9,
+        "percentage": 36
+      },
+      {
+        "documentType": "810",
+        "count": 5,
+        "percentage": 20
+      },
+      {
+        "documentType": "AUTOMATED_TEST_ERROR",
+        "count": 5,
+        "percentage": 20
+      },
+      {
+        "documentType": "AUTOMATED_TEST_BATCHED",
+        "count": 2,
+        "percentage": 8
+      },
+      {
+        "documentType": "AUTOMATED_TEST_QUEUED",
+        "count": 2,
+        "percentage": 8
+      },
+      {
+        "documentType": "AUTOMATED_TEST_SUSPENSE",
+        "count": 1,
+        "percentage": 4
+      },
+      {
+        "documentType": "SUSPEND_TEST",
+        "count": 1,
+        "percentage": 4
+      }
+    ]
+  },
+  "tradingPartners": {
+    "topSources": [
+      {
+        "name": "AUTOMATED_TEST_RETRY",
+        "count": 9,
+        "percentage": 36
+      },
+      {
+        "name": "AUTOMATED_TEST_ERROR",
+        "count": 5,
+        "percentage": 20
+      },
+      {
+        "name": "Oberto",
+        "count": 4,
+        "percentage": 16
+      },
+      {
+        "name": "AUTOMATED_TEST_BATCHED",
+        "count": 2,
+        "percentage": 8
+      },
+      {
+        "name": "AUTOMATED_TEST_QUEUED",
+        "count": 2,
+        "percentage": 8
+      },
+      {
+        "name": "EasyGardener",
+        "count": 1,
+        "percentage": 4
+      },
+      {
+        "name": "AUTOMATED_TEST_SUSPENSE",
+        "count": 1,
+        "percentage": 4
+      },
+      {
+        "name": "SUSPEND_TEST",
+        "count": 1,
+        "percentage": 4
+      }
+    ],
+    "topDestinations": [
+      {
+        "name": "AUTOMATED_TEST_RETRY",
+        "count": 9,
+        "percentage": 36
+      },
+      {
+        "name": "AUTOMATED_TEST_ERROR",
+        "count": 5,
+        "percentage": 20
+      },
+      {
+        "name": "Costco",
+        "count": 4,
+        "percentage": 16
+      },
+      {
+        "name": "AUTOMATED_TEST_BATCHED",
+        "count": 2,
+        "percentage": 8
+      },
+      {
+        "name": "AUTOMATED_TEST_QUEUED",
+        "count": 2,
+        "percentage": 8
+      },
+      {
+        "name": "Lowes",
+        "count": 1,
+        "percentage": 4
+      },
+      {
+        "name": "AUTOMATED_TEST_SUSPENSE",
+        "count": 1,
+        "percentage": 4
+      },
+      {
+        "name": "SUSPEND_TEST",
+        "count": 1,
+        "percentage": 4
+      }
+    ],
+    "uniqueSources": 8,
+    "uniqueDestinations": 8
+  },
+  "errorAnalysis": {
+    "totalErrors": 8,
+    "errorRate": 32,
+    "errorReasons": [
+      {
+        "reason": "No rule found for the required rule type: ROUTE",
+        "count": 7,
+        "percentage": 87.5
+      },
+      {
+        "reason": "No reason specified",
+        "count": 1,
+        "percentage": 12.5
+      }
+    ],
+    "errorsByDocumentType": {
+      "AUTOMATED_TEST_RETRY": 7,
+      "AUTOMATED_TEST_ERROR": 1
+    },
+    "highErrorPartners": [
+      {
+        "partner": "AUTOMATED_TEST_RETRY",
+        "errorCount": 7,
+        "errorRate": 87.5
+      },
+      {
+        "partner": "AUTOMATED_TEST_ERROR",
+        "errorCount": 1,
+        "errorRate": 12.5
+      }
+    ]
+  },
+  "directionAnalysis": {
+    "summary": {
+      "O": 5,
+      "U": 7,
+      "I": 13
+    },
+    "chartData": [
+      {
+        "direction": "Outbound",
+        "directionCode": "O",
+        "count": 5,
+        "percentage": 20
+      },
+      {
+        "direction": "Unknown",
+        "directionCode": "U",
+        "count": 7,
+        "percentage": 28
+      },
+      {
+        "direction": "Inbound",
+        "directionCode": "I",
+        "count": 13,
+        "percentage": 52
+      }
+    ]
+  },
+  "processingTimeMetrics": {
+    "averageProcessingTimeMs": 24568120,
+    "averageProcessingTimeMinutes": 409.47,
+    "averageProcessingTimeHours": 6.82,
+    "minProcessingTimeMs": 0,
+    "maxProcessingTimeMs": 402892000,
+    "medianProcessingTimeMs": 14000,
+    "processingTimeByStatus": {
+      "ACK-MAN": {
+        "avgMs": 122766400,
+        "avgMinutes": 2046.11,
+        "count": 5
+      },
+      "ERROR": {
+        "avgMs": 1250,
+        "avgMinutes": 0.02,
+        "count": 8
+      },
+      "CLEARED": {
+        "avgMs": 15000,
+        "avgMinutes": 0.25,
+        "count": 7
+      },
+      "SENT": {
+        "avgMs": 56000,
+        "avgMinutes": 0.93,
+        "count": 2
+      },
+      "ERROR-HANDLED": {
+        "avgMs": 124000,
+        "avgMinutes": 2.07,
+        "count": 1
+      },
+      "DELIVERED": {
+        "avgMs": 10000,
+        "avgMinutes": 0.17,
+        "count": 1
+      },
+      "RECEIVED": {
+        "avgMs": 10000,
+        "avgMinutes": 0.17,
+        "count": 1
+      }
+    }
+  },
+  "successRateCalculation": {
+    "successfulTransactions": 16,
+    "errorTransactions": 8,
+    "handledErrors": 1,
+    "totalAnalyzed": 25,
+    "successRate": 64,
+    "errorRate": 32,
+    "handledErrorRate": 4,
+    "effectiveSuccessRate": 68,
+    "chartData": {
+      "labels": [
+        "Successful",
+        "Errors",
+        "Handled Errors",
+        "Other"
+      ],
+      "values": [
+        16,
+        8,
+        1,
+        0
+      ]
+    }
+  },
+  "timeBasedTrends": {
+    "dailyMetrics": [
+      {
+        "date": "2025-11-28",
+        "total": 1,
+        "errors": 0,
+        "success": 1,
+        "errorRate": 0,
+        "successRate": 100,
+        "statusBreakdown": {
+          "ACK-MAN": 1
+        }
+      },
+      {
+        "date": "2025-12-02",
+        "total": 4,
+        "errors": 0,
+        "success": 4,
+        "errorRate": 0,
+        "successRate": 100,
+        "statusBreakdown": {
+          "ACK-MAN": 4
+        }
+      },
+      {
+        "date": "2025-12-03",
+        "total": 20,
+        "errors": 8,
+        "success": 11,
+        "errorRate": 40,
+        "successRate": 55,
+        "statusBreakdown": {
+          "ERROR": 8,
+          "CLEARED": 7,
+          "SENT": 2,
+          "ERROR-HANDLED": 1,
+          "DELIVERED": 1,
+          "RECEIVED": 1
+        }
+      }
+    ]
+  },
+  "keyRiskIndicators": {
+    "highErrorRate": {
+      "threshold": 10,
+      "currentRate": 32,
+      "isRisk": true
+    },
+    "stuckTransactions": {
+      "count": 1,
+      "threshold": 24,
+      "transactions": [
+        {
+          "wfid": 3239216,
+          "processingTimeHours": 111.91,
+          "status": "ACK-MAN"
+        }
+      ]
+    },
+    "highErrorPartners": {
+      "threshold": 3,
+      "partners": [
+        {
+          "partner": "AUTOMATED_TEST_RETRY",
+          "errorCount": 7,
+          "requiresAttention": true
+        }
+      ]
+    },
+    "unmappedTransactions": {
+      "count": 20,
+      "percentage": 80
+    }
+  },
+  "operationalRecommendations": [
+    {
+      "priority": "HIGH",
+      "category": "Routing Configuration",
+      "issue": "7 transactions failing due to missing ROUTE rules",
+      "recommendation": "Review and configure routing rules for AUTOMATED_TEST_RETRY document type",
+      "impact": "Blocking automated test transactions"
+    },
+    {
+      "priority": "HIGH",
+      "category": "Error Rate",
+      "issue": "Current error rate is 32.00%",
+      "recommendation": "Error rate exceeds 10% threshold - immediate investigation required",
+      "impact": "Service reliability and partner satisfaction"
+    },
+    {
+      "priority": "MEDIUM",
+      "category": "Processing Time",
+      "issue": "1 transactions processing for over 24 hours",
+      "recommendation": "Implement automated alerts for transactions exceeding SLA thresholds",
+      "impact": "Customer experience and operational efficiency"
+    },
+    {
+      "priority": "MEDIUM",
+      "category": "Trading Partner Management",
+      "issue": "2 partners with multiple errors",
+      "recommendation": "Engage with high-error partners to resolve integration issues",
+      "impact": "Partner relationships and data quality"
+    },
+    {
+      "priority": "LOW",
+      "category": "Data Quality",
+      "issue": "20 transactions with unmapped partner names",
+      "recommendation": "Complete partner master data setup for all trading partners",
+      "impact": "Reporting accuracy and operational visibility"
+    },
+    {
+      "priority": "LOW",
+      "category": "Monitoring",
+      "issue": "Need real-time visibility into transaction health",
+      "recommendation": "Implement dashboard with key metrics: error rate, processing time, stuck transactions",
+      "impact": "Proactive issue resolution and reduced downtime"
+    }
+  ]
+}
