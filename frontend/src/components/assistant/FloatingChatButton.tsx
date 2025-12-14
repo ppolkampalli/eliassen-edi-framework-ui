@@ -1,19 +1,34 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ChatWidget } from './ChatWidget';
 import { assistantApi } from '../../services/assistantApi';
 
-export function FloatingChatButton() {
+interface FloatingChatButtonProps {
+  onWidthChange?: (width: number) => void;
+  onPinnedChange?: (pinned: boolean) => void;
+}
+
+export function FloatingChatButton({ onWidthChange, onPinnedChange }: FloatingChatButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
   const [conversationId, setConversationId] = useState<string>(`conv-${Date.now()}`);
+  const [width, setWidth] = useState(400); // Default width
+  const [isResizing, setIsResizing] = useState(false);
+  const resizeRef = useRef<HTMLDivElement>(null);
 
   const handleClose = () => {
     setIsOpen(false);
     setIsPinned(false);
+    if (onPinnedChange) onPinnedChange(false);
+    if (onWidthChange) onWidthChange(0);
   };
 
   const togglePin = () => {
-    setIsPinned(!isPinned);
+    const newPinned = !isPinned;
+    setIsPinned(newPinned);
+    if (onPinnedChange) onPinnedChange(newPinned);
+    if (onWidthChange) {
+      onWidthChange(newPinned ? width : 0);
+    }
   };
 
   const handleClearChat = async () => {
@@ -28,17 +43,72 @@ export function FloatingChatButton() {
     }
   };
 
+  // Handle resize
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsResizing(true);
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing) return;
+
+      const newWidth = window.innerWidth - e.clientX;
+      // Constrain width between 300px and 800px
+      const constrainedWidth = Math.min(Math.max(newWidth, 300), 800);
+      setWidth(constrainedWidth);
+
+      if (onWidthChange && isPinned) {
+        onWidthChange(constrainedWidth);
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    if (isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing, isPinned, onWidthChange]);
+
+  // Notify parent of width changes when pinned
+  useEffect(() => {
+    if (isPinned && onWidthChange) {
+      onWidthChange(width);
+    }
+  }, [isPinned, width, onWidthChange]);
+
   return (
     <>
       {/* Chat Widget Modal */}
       {isOpen && (
         <div
-          className={`fixed z-50 transition-all duration-300 ${
+          ref={resizeRef}
+          className={`fixed z-50 transition-all ${
+            isResizing ? '' : 'duration-300'
+          } ${
             isPinned
-              ? 'top-0 right-0 h-full w-96 shadow-2xl'
+              ? 'top-0 right-0 h-full shadow-2xl'
               : 'inset-0 flex items-end justify-end p-4 pointer-events-none'
           }`}
+          style={isPinned ? { width: `${width}px` } : {}}
         >
+          {/* Resize Handle - Only visible when pinned */}
+          {isPinned && (
+            <div
+              className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-blue-500 bg-gray-300 transition-colors z-10"
+              onMouseDown={handleMouseDown}
+              title="Drag to resize"
+            />
+          )}
+
           <div
             className={`bg-white ${
               isPinned

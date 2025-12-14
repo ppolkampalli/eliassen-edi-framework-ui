@@ -20,6 +20,10 @@ export function DocumentDetails() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
 
+  // Assistant state
+  const [assistantWidth, setAssistantWidth] = useState(0);
+  const [isAssistantPinned, setIsAssistantPinned] = useState(false);
+
   const handleSearch = async (params: DocumentQueryParams) => {
     setIsLoading(true);
     setError(null);
@@ -69,7 +73,12 @@ export function DocumentDetails() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div
+      className="container mx-auto px-4 py-8 transition-all duration-300"
+      style={{
+        marginRight: isAssistantPinned ? `${assistantWidth}px` : '0'
+      }}
+    >
       <h1 className="text-3xl font-bold mb-6">Document Details</h1>
 
       <DocumentSearchForm onSearch={handleSearch} isLoading={isLoading} />
@@ -163,7 +172,10 @@ export function DocumentDetails() {
       )}
 
       {/* Floating AI Assistant */}
-      <FloatingChatButton />
+      <FloatingChatButton
+        onWidthChange={setAssistantWidth}
+        onPinnedChange={setIsAssistantPinned}
+      />
     </div>
   );
 }
