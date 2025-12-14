@@ -6,6 +6,7 @@ import { errorMiddleware } from './middleware/error.middleware';
 import helloWorldRoutes from './routes/helloworld.routes';
 import aiRoutes from './routes/ai.routes';
 import documentRoutes from './routes/document.routes';
+import assistantRoutes from './routes/assistant.routes';
 
 // Load environment variables
 dotenv.config();
@@ -32,6 +33,7 @@ app.get('/api/health', (req: Request, res: Response) => {
 app.use('/api/helloworld', helloWorldRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/docs', documentRoutes);
+app.use('/api/assistant', assistantRoutes);
 
 // Root endpoint
 app.get('/', (req: Request, res: Response) => {
@@ -42,7 +44,8 @@ app.get('/', (req: Request, res: Response) => {
       health: '/api/health',
       helloworld: '/api/helloworld',
       ai: '/api/ai',
-      docs: '/api/docs'
+      docs: '/api/docs',
+      assistant: '/api/assistant'
     }
   });
 });

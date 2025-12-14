@@ -3,6 +3,7 @@ import { DocumentSearchForm } from '../components/DocumentSearchForm';
 import { DocumentTable } from '../components/DocumentTable';
 import { Tabs } from '../components/Tabs';
 import { AnalysisDashboard } from '../components/analysis/AnalysisDashboard';
+import { FloatingChatButton } from '../components/assistant/FloatingChatButton';
 import type { DocumentQueryParams, DocumentSummary } from '../../../shared/types/document.types';
 import type { EDIBusinessAnalysis } from '../../../shared/types/analysis.types';
 import { documentApi } from '../services/documentApi';
@@ -160,6 +161,9 @@ export function DocumentDetails() {
           No documents found. Try adjusting your search criteria.
         </div>
       )}
+
+      {/* Floating AI Assistant */}
+      <FloatingChatButton />
     </div>
   );
 }
