@@ -229,6 +229,123 @@ ${ediContext ? `\n\nCurrent EDI Data Context:\n${JSON.stringify(ediContext, null
       throw error;
     }
   }
+
+  /**
+   * Parse natural language query into DocumentQueryParams
+   */
+  async parseSearchQuery(query: string): Promise<DocumentQueryParams> {
+    if (!this.isConfigured()) {
+      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY in your .env file.');
+    }
+
+    try {
+      console.log(`[OpenAI] Parsing search query: "${query}"`);
+
+      const today = new Date();
+      const systemPrompt = `You are a specialized EDI document search query parser. Your job is to convert natural language queries into structured search parameters.
+
+Current Date: ${today.toISOString().split('T')[0]} (${today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })})
+
+Document Types:
+- 810 = Invoice
+- 850 = Purchase Order (PO)
+- 856 = Advanced Shipping Notice (ASN)
+- 997 = Functional Acknowledgment
+
+Transaction Statuses:
+- SENT = Successfully sent
+- RECEIVED = Successfully received
+- ERROR = Failed with error
+- PROCESSING = Currently processing
+
+Date Handling Rules:
+- "today" = start of today (00:00:00) to end of today (23:59:59)
+- "yesterday" = start of yesterday to end of yesterday
+- "last week" = 7 days ago to today
+- "last month" = 30 days ago to today
+- "last X days" = X days ago to today
+- Always use ISO 8601 format: YYYY-MM-DDTHH:mm:ss.sssZ
+- Start dates should be 00:00:00.000Z
+- End dates should be 23:59:59.999Z
+
+Extract these parameters from the query and return ONLY a JSON object with these fields (include only fields mentioned in the query):
+{
+  "startDate": "ISO 8601 timestamp",
+  "endDate": "ISO 8601 timestamp",
+  "source": "source trading partner ID (lowercase)",
+  "destination": "destination trading partner ID (lowercase)",
+  "documentType": "810, 850, 856, or 997",
+  "transactionStatus": "SENT, RECEIVED, ERROR, or PROCESSING",
+  "selectFiltered": "Y or N",
+  "withNotes": true or false,
+  "sortBy": "transactionLastDateTime, documentCreationDate, wfid, or documentType",
+  "sortDir": "asc or desc"
+}
+
+Examples:
+Query: "Show me all invoices from last week"
+Response: {"documentType":"810","startDate":"2025-12-09T00:00:00.000Z","endDate":"2025-12-16T23:59:59.999Z","selectFiltered":"Y","withNotes":true,"sortBy":"transactionLastDateTime","sortDir":"desc"}
+
+Query: "Find documents sent to Maxxmart today"
+Response: {"destination":"maxxmart","startDate":"2025-12-16T00:00:00.000Z","endDate":"2025-12-16T23:59:59.999Z","selectFiltered":"Y","withNotes":true,"sortBy":"transactionLastDateTime","sortDir":"desc"}
+
+Query: "Show all errors in the last 3 days"
+Response: {"transactionStatus":"ERROR","startDate":"2025-12-13T00:00:00.000Z","endDate":"2025-12-16T23:59:59.999Z","selectFiltered":"Y","withNotes":true,"sortBy":"transactionLastDateTime","sortDir":"desc"}
+
+Return ONLY the JSON object, no explanation.`;
+
+      const completion = await this.client.chat.completions.create({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: query }
+        ],
+        max_tokens: 500,
+        temperature: 0.1, // Low temperature for consistent parsing
+      });
+
+      const responseText = completion.choices[0]?.message?.content || '{}';
+
+      console.log(`[OpenAI] Parse response: ${responseText}`);
+
+      // Extract JSON from response (handle markdown code blocks)
+      let jsonText = responseText.trim();
+      const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) {
+        jsonText = jsonMatch[1];
+      } else {
+        // Remove any leading/trailing text that's not JSON
+        const startIdx = jsonText.indexOf('{');
+        const endIdx = jsonText.lastIndexOf('}');
+        if (startIdx >= 0 && endIdx > startIdx) {
+          jsonText = jsonText.substring(startIdx, endIdx + 1);
+        }
+      }
+
+      const params: DocumentQueryParams = JSON.parse(jsonText);
+
+      // Set defaults for common fields if not specified
+      if (params.selectFiltered === undefined) {
+        params.selectFiltered = 'Y';
+      }
+      if (params.withNotes === undefined) {
+        params.withNotes = true;
+      }
+      if (params.sortBy === undefined) {
+        params.sortBy = 'transactionLastDateTime';
+      }
+      if (params.sortDir === undefined) {
+        params.sortDir = 'desc';
+      }
+
+      console.log(`[OpenAI] Parsed parameters:`, params);
+
+      return params;
+    } catch (error) {
+      console.error('[OpenAI] Query parsing error:', error);
+      throw new Error('Failed to parse search query: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    }
+  }
 }
 
 export const openaiService = new OpenAIService();

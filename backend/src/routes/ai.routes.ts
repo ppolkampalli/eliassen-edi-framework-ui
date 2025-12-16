@@ -23,4 +23,7 @@ router.get('/health', aiController.health);
 // GET /api/ai/config - Get AI configuration
 router.get('/config', aiController.getConfig);
 
+// POST /api/ai/parse-query - Parse natural language query into search parameters
+router.post('/parse-query', aiController.parseQuery);
+
 export default router;

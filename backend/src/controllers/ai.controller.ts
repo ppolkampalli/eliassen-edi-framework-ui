@@ -199,5 +199,39 @@ export const aiController = {
     } catch (error) {
       next(error);
     }
+  },
+
+  /**
+   * POST /api/ai/parse-query
+   * Parse natural language query into DocumentQueryParams
+   * Body: { query: string }
+   */
+  parseQuery: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { query } = req.body;
+
+      if (!query || typeof query !== 'string') {
+        throw createError('Query is required and must be a string', 400);
+      }
+
+      if (query.trim().length === 0) {
+        throw createError('Query cannot be empty', 400);
+      }
+
+      console.log(`[AIController] Parsing NLP query: "${query}"`);
+
+      // Parse the query using OpenAI
+      const params = await openaiService.parseSearchQuery(query);
+
+      res.json({
+        status: 'success',
+        data: {
+          params,
+          originalQuery: query
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 };

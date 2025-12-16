@@ -3,6 +3,7 @@ import { DocumentSearchForm } from '../components/DocumentSearchForm';
 import { DocumentTable } from '../components/DocumentTable';
 import { Tabs } from '../components/Tabs';
 import { AnalysisDashboard } from '../components/analysis/AnalysisDashboard';
+import { NLPQueryBox } from '../components/NLPQueryBox';
 import { useAppContext } from '../context/AppContext';
 import type { DocumentQueryParams } from '../../../shared/types/document.types';
 import { documentApi } from '../services/documentApi';
@@ -11,6 +12,7 @@ export function DocumentDetails() {
   const { documentState, setDocumentState, analysisState, setAnalysisState } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [parsedParams, setParsedParams] = useState<DocumentQueryParams | undefined>(undefined);
 
   const handleSearch = async (params: DocumentQueryParams) => {
     setIsLoading(true);
@@ -76,11 +78,20 @@ export function DocumentDetails() {
     }
   };
 
+  const handleNLPQuery = (params: DocumentQueryParams) => {
+    // Update parsed params to populate the form
+    setParsedParams(params);
+    // Automatically trigger search with parsed parameters
+    handleSearch(params);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Document Details</h1>
 
-      <DocumentSearchForm onSearch={handleSearch} isLoading={isLoading} />
+      <NLPQueryBox onQueryParsed={handleNLPQuery} isLoading={isLoading} />
+
+      <DocumentSearchForm onSearch={handleSearch} isLoading={isLoading} externalParams={parsedParams} />
 
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">

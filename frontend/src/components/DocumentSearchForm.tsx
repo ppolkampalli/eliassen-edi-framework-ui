@@ -1,12 +1,13 @@
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import type { DocumentQueryParams } from '../../../shared/types/document.types';
 
 interface DocumentSearchFormProps {
   onSearch: (params: DocumentQueryParams) => void;
   isLoading: boolean;
+  externalParams?: DocumentQueryParams;
 }
 
-export function DocumentSearchForm({ onSearch, isLoading }: DocumentSearchFormProps) {
+export function DocumentSearchForm({ onSearch, isLoading, externalParams }: DocumentSearchFormProps) {
   const [formData, setFormData] = useState<DocumentQueryParams>({
     startDate: '',
     endDate: '',
@@ -19,6 +20,13 @@ export function DocumentSearchForm({ onSearch, isLoading }: DocumentSearchFormPr
     sortBy: 'transactionLastDateTime',
     sortDir: 'desc'
   });
+
+  // Update form data when external params change (from NLP query)
+  useEffect(() => {
+    if (externalParams) {
+      setFormData(prev => ({ ...prev, ...externalParams }));
+    }
+  }, [externalParams]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
